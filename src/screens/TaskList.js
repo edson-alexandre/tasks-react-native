@@ -4,6 +4,7 @@ import { View, Text, ImageBackground, StyleSheet } from 'react-native';
 import todayImage from '../../assets/imgs/today.jpg';
 import moment from 'moment';
 import 'moment/locale/pt-br';
+import commomStykes from '../commomStykes';
 
 export default class TaskList extends Component {
   render() {
@@ -13,12 +14,15 @@ export default class TaskList extends Component {
       <View style={styles.container}>
         <ImageBackground source={todayImage} style={styles.background}>
           <View style={styles.titleBar}>
-            <Text>Hoje</Text>
-            <Text> {today} </Text>
+            <Text style={styles.title}>Hoje</Text>
+            <Text style={styles.subTitle}> {today} </Text>
           </View>
         </ImageBackground>
         <View style={styles.taskList}>
-          <Text>Lista de Tarefas</Text>
+          <Text>Tarefa 1</Text>
+          <Text>Tarefa 2</Text>
+          <Text>Tarefa 3</Text>
+          <Text>Tarefa 4</Text>
         </View>
       </View>
     );
@@ -38,5 +42,19 @@ const styles = StyleSheet.create({
   titleBar: {
     flex: 1,
     justifyContent: 'flex-end',
+  },
+  title: {
+    fontFamily: commomStykes.fontFamily,
+    color: commomStykes.colors.secondary,
+    fontSize: 50,
+    marginLeft: 20,
+    marginBottom: 20,
+  },
+  subTitle: {
+    fontFamily: commomStykes.fontFamily,
+    color: commomStykes.colors.secondary,
+    fontSize: 20,
+    marginLeft: 20,
+    marginBottom: 30,
   },
 });
