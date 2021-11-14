@@ -5,6 +5,7 @@ import todayImage from '../../assets/imgs/today.jpg';
 import moment from 'moment';
 import 'moment/locale/pt-br';
 import commomStykes from '../commomStykes';
+import Task from '../components/Task';
 
 export default class TaskList extends Component {
   render() {
@@ -19,10 +20,8 @@ export default class TaskList extends Component {
           </View>
         </ImageBackground>
         <View style={styles.taskList}>
-          <Text>Tarefa 1</Text>
-          <Text>Tarefa 2</Text>
-          <Text>Tarefa 3</Text>
-          <Text>Tarefa 4</Text>
+          <Task desc="Tarefa 1" estimatedAt={new Date()} doneAt={new Date()} />
+          <Task desc="Tarefa 2" estimatedAt={new Date()} doneAt={null} />
         </View>
       </View>
     );
