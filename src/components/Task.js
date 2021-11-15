@@ -2,15 +2,23 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+import moment from 'moment';
+import 'moment/locale/pt-br';
+
 import commomStykes from '../commomStykes';
 
 export default props => {
+  const doneOrNotStyle = props.doneAt !== null ? { textDecorationLine: 'line-through' } : {};
+
+  const date = props.doneAt ? props.doneAt : props.estimatedAt;
+  const formatedDate = moment(date).locale('pt-br').format('ddd, D, [de] MMMM');
+
   return (
     <View style={styles.container}>
       <View style={styles.checkContainer}>{getCheckView(props.doneAt)}</View>
       <View>
-        <Text> {props.desc} </Text>
-        <Text> {props.estimatedAt + ''} </Text>
+        <Text style={[styles.desc, doneOrNotStyle]}> {props.desc} </Text>
+        <Text style={styles.date}> {formatedDate} </Text>
       </View>
     </View>
   );
@@ -24,7 +32,7 @@ function getCheckView(doneAt) {
       </View>
     );
   } else {
-    return <View style={styles.pendding}></View>;
+    return <View style={styles.pendding} />;
   }
 }
 
@@ -57,5 +65,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#4d7031',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  desc: {
+    fontFamily: commomStykes.fontFamily,
+    color: commomStykes.colors.mainTerxt,
+    fontSize: 15,
+  },
+  date: {
+    fontFamily: commomStykes.fontFamily,
+    color: commomStykes.colors.subText,
+    fontSize: 12,
   },
 });
