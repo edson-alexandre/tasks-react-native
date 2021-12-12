@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ImageBackground, StyleSheet } from 'react-native';
+import { View, Text, ImageBackground, StyleSheet, FlatList } from 'react-native';
 
 import todayImage from '../../assets/imgs/today.jpg';
 import moment from 'moment';
@@ -8,6 +8,33 @@ import commomStykes from '../commomStykes';
 import Task from '../components/Task';
 
 export default class TaskList extends Component {
+  state = {
+    tasks: [
+      {
+        id: Math.random(),
+        desc: 'Comprar Livro de React Native',
+        estimatedAt: new Date(),
+        doneAt: new Date(),
+      },
+      {
+        id: Math.random(),
+        desc: 'Ler Livro de React Native',
+        estimatedAt: new Date(),
+        doneAt: null,
+      },
+    ],
+  };
+
+  toggleTask = taskId => {
+    const tasks = [...this.state.tasks];
+    tasks.forEach(task => {
+      if (task.id === taskId) {
+        task.doneAt = task.doneAt ? null : new Date();
+      }
+    });
+    this.setState({ tasks, ...this.state });
+  };
+
   render() {
     const today = moment().locale('pt-br').format('ddd, D, [de] MMMM');
 
@@ -20,8 +47,11 @@ export default class TaskList extends Component {
           </View>
         </ImageBackground>
         <View style={styles.taskList}>
-          <Task desc="Tarefa 1" estimatedAt={new Date()} doneAt={new Date()} />
-          <Task desc="Tarefa 2" estimatedAt={new Date()} doneAt={null} />
+          <FlatList
+            data={this.state.tasks}
+            keyExtractor={item => `${item.id}`}
+            renderItem={({ item }) => <Task {...item} toggleTask={this.toggleTask} />}
+          />
         </View>
       </View>
     );
