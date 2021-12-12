@@ -7,10 +7,12 @@ import moment from 'moment';
 import 'moment/locale/pt-br';
 import commomStykes from '../commomStykes';
 import Task from '../components/Task';
+import AddTask from './AddTask';
 
 export default class TaskList extends Component {
   state = {
     showDoneTasks: true,
+    showAddTask: false,
     visibleTasks: [],
     tasks: [
       {
@@ -49,6 +51,10 @@ export default class TaskList extends Component {
     this.setState({ tasks }, this.filterTasks);
   };
 
+  onCancel = () => {
+    this.setState({ showAddTask: false });
+  };
+
   componentDidMount = () => {
     this.filterTasks();
   };
@@ -58,6 +64,7 @@ export default class TaskList extends Component {
 
     return (
       <View style={styles.container}>
+        <AddTask isVisible={this.state.showAddTask} onCancel={this.onCancel} />
         <ImageBackground source={todayImage} style={styles.background}>
           <View style={styles.iconBar}>
             <TouchableOpacity>
@@ -81,6 +88,13 @@ export default class TaskList extends Component {
             renderItem={({ item }) => <Task {...item} toggleTask={this.toggleTask} />}
           />
         </View>
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() => this.setState({ showAddTask: true })}
+          activeOpacity={0.7}
+        >
+          <Icon name="plus" size={20} color={commomStykes.colors.secondary} />
+        </TouchableOpacity>
       </View>
     );
   }
@@ -119,5 +133,16 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     marginHorizontal: 20,
     marginTop: Platform.os === 'ios' ? 40 : 10,
+  },
+  addButton: {
+    position: 'absolute',
+    right: 30,
+    bottom: 30,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: commomStykes.colors.today,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
