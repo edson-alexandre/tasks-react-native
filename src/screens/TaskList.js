@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { View, Text, ImageBackground, StyleSheet, FlatList } from 'react-native';
+import { View, Text, ImageBackground, StyleSheet, FlatList, TouchableOpacity, Platform } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import todayImage from '../../assets/imgs/today.jpg';
 import moment from 'moment';
@@ -9,6 +10,8 @@ import Task from '../components/Task';
 
 export default class TaskList extends Component {
   state = {
+    showDoneTasks: true,
+    visibleTasks: [],
     tasks: [
       {
         id: Math.random(),
@@ -25,6 +28,17 @@ export default class TaskList extends Component {
     ],
   };
 
+  toggleFilter = () => {
+    this.setState({ showDoneTasks: !this.state.showDoneTasks }, this.filterTasks);
+  };
+
+  filterTasks = () => {
+    const visibleTasks = this.state.showDoneTasks
+      ? [...this.state.tasks]
+      : [...this.state.tasks.filter(t => t.doneAt === null)];
+    this.setState({ visibleTasks });
+  };
+
   toggleTask = taskId => {
     const tasks = [...this.state.tasks];
     tasks.forEach(task => {
@@ -32,7 +46,11 @@ export default class TaskList extends Component {
         task.doneAt = task.doneAt ? null : new Date();
       }
     });
-    this.setState({ tasks, ...this.state });
+    this.setState({ tasks }, this.filterTasks);
+  };
+
+  componentDidMount = () => {
+    this.filterTasks();
   };
 
   render() {
@@ -41,6 +59,16 @@ export default class TaskList extends Component {
     return (
       <View style={styles.container}>
         <ImageBackground source={todayImage} style={styles.background}>
+          <View style={styles.iconBar}>
+            <TouchableOpacity>
+              <Icon
+                name={this.state.showDoneTasks ? 'eye' : 'eye-slash'}
+                size={20}
+                color={commomStykes.colors.secondary}
+                onPress={this.toggleFilter}
+              />
+            </TouchableOpacity>
+          </View>
           <View style={styles.titleBar}>
             <Text style={styles.title}>Hoje</Text>
             <Text style={styles.subTitle}> {today} </Text>
@@ -48,7 +76,7 @@ export default class TaskList extends Component {
         </ImageBackground>
         <View style={styles.taskList}>
           <FlatList
-            data={this.state.tasks}
+            data={this.state.visibleTasks}
             keyExtractor={item => `${item.id}`}
             renderItem={({ item }) => <Task {...item} toggleTask={this.toggleTask} />}
           />
@@ -85,5 +113,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginLeft: 20,
     marginBottom: 30,
+  },
+  iconBar: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginHorizontal: 20,
+    marginTop: Platform.os === 'ios' ? 40 : 10,
   },
 });
