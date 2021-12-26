@@ -9,7 +9,7 @@ import {
   TextInput,
   Platform,
 } from 'react-native';
-import commomStykes from '../commomStykes';
+import commomStyles from '../commomStyles';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 import moment from 'moment';
@@ -18,6 +18,7 @@ const initialStat = {
   desc: '',
   date: new Date(),
   showDatePicker: false,
+  doneAt: null,
 };
 
 export default class AddTask extends Component {
@@ -25,7 +26,17 @@ export default class AddTask extends Component {
     ...initialStat,
   };
 
-  getDateTimePicker = () => {
+  saveTask = () => {
+    this.setState({ ...initialStat });
+    this.props.saveTask({ ...this.state });
+  };
+
+  onCancel = () => {
+    this.setState({ ...initialStat });
+    this.props.onCancel();
+  };
+
+  getDatePicker = () => {
     let datePicker = (
       <DateTimePicker
         value={this.state.date}
@@ -69,19 +80,21 @@ export default class AddTask extends Component {
             value={this.state.desc}
             onChangeText={desc => this.setState({ desc })}
           />
-          {this.getDateTimePicker()}
+          {this.getDatePicker()}
           <View style={styles.buttons}>
             <TouchableOpacity>
-              <Text style={styles.button} onPress={this.props.onCancel}>
+              <Text style={styles.button} onPress={this.onCancel}>
                 Cancelar
               </Text>
             </TouchableOpacity>
             <TouchableOpacity>
-              <Text style={styles.button}>Salvar</Text>
+              <Text style={styles.button} onPress={() => this.saveTask()}>
+                Salvar
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
-        <TouchableWithoutFeedback onPress={this.props.onCancel}>
+        <TouchableWithoutFeedback onPress={this.onCancel}>
           <View style={styles.background} />
         </TouchableWithoutFeedback>
       </Modal>
@@ -98,15 +111,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   header: {
-    fontFamily: commomStykes.fontFamily,
-    backgroundColor: commomStykes.colors.today,
-    color: commomStykes.colors.secondary,
+    fontFamily: commomStyles.fontFamily,
+    backgroundColor: commomStyles.colors.today,
+    color: commomStyles.colors.secondary,
     textAlign: 'center',
     padding: 15,
     fontSize: 18,
   },
   input: {
-    fontFamily: commomStykes.fontFamily,
+    fontFamily: commomStyles.fontFamily,
 
     height: 40,
     margin: 15,
@@ -122,10 +135,10 @@ const styles = StyleSheet.create({
   button: {
     margin: 20,
     marginRight: 30,
-    color: commomStykes.colors.today,
+    color: commomStyles.colors.today,
   },
   date: {
-    fontFamily: commomStykes.fontFamily,
+    fontFamily: commomStyles.fontFamily,
     fontSize: 20,
     marginLeft: 15,
   },
