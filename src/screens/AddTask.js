@@ -16,7 +16,7 @@ import moment from 'moment';
 
 const initialStat = {
   desc: '',
-  date: new Date(),
+  estimateAt: new Date(),
   showDatePicker: false,
   doneAt: null,
 };
@@ -28,7 +28,11 @@ export default class AddTask extends Component {
 
   saveTask = () => {
     this.setState({ ...initialStat });
-    this.props.saveTask({ ...this.state });
+    this.props.saveTask({
+      desc: this.state.desc,
+      estimateAt: this.state.estimateAt,
+      doneAt: this.state.doneAt,
+    });
   };
 
   onCancel = () => {
@@ -39,13 +43,13 @@ export default class AddTask extends Component {
   getDatePicker = () => {
     let datePicker = (
       <DateTimePicker
-        value={this.state.date}
+        value={this.state.estimateAt}
         onChange={(_, date) => this.setState({ date, showDatePicker: false })}
         mode="date"
       />
     );
 
-    const dateString = moment(this.state.date).format('ddd, D [de] MMMM [de] YYYY');
+    const dateString = moment(this.state.estimateAt).format('ddd, D [de] MMMM [de] YYYY');
 
     if (Platform.OS === 'android') {
       datePicker = (
