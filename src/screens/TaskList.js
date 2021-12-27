@@ -33,7 +33,7 @@ export default class TaskList extends Component {
 
   loadTasks = async () => {
     try {
-      const maxDate = moment().endOf('day').toISOString();
+      const maxDate = moment().add({ days: this.props.daysAhead }).endOf('day').toISOString();
       const res = await axios.get(`${server}/tasks?date=${maxDate}`);
       this.setState({ tasks: res.data }, this.filterTasks);
     } catch (e) {
@@ -108,7 +108,7 @@ export default class TaskList extends Component {
             </TouchableOpacity>
           </View>
           <View style={styles.titleBar}>
-            <Text style={styles.title}>Hoje</Text>
+            <Text style={styles.title}>{this.props.title}</Text>
             <Text style={styles.subTitle}> {today} </Text>
           </View>
         </ImageBackground>
